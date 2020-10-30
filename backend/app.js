@@ -1,0 +1,50 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const placesRoutes = require("./routes/places-route");
+const usersRoutes = require("./routes/users-route");
+const HttpError = require("./models/http-error");
+const mongoose = require("mongoose");
+
+const app = express();
+
+app.use(bodyParser.json()); // json is stored at req.body property.
+
+// add headers to overcome CORS browser check.
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*') // '*' means allow any domain to send requests.
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested')
+  next();
+});
+
+app.use("/api/places", placesRoutes);
+
+app.use("/api/users", usersRoutes);
+
+// handling unsupported route. This works because
+app.use((req, res, next) => {
+  const error = new HttpError("Could not find this route.", 404);
+  throw error;
+});
+
+// handling errors thrown by previous middleware(s)
+// if there are 4 input, express recognize this is an error handling middleware.
+app.use((error, req, res, next) => {
+  console.log(error.code);
+  if (res.headerSent) {
+    return next(error); // async error handling.
+  }
+  res
+    .status(error.code || 500)
+    .json({ message: error.message || "An unknown error occured" });
+});
+
+mongoose.connect(
+  "mongodb+srv://junyu:liqztTai41dpd1dB@avalon.exhb8.mongodb.net/places?retryWrites=true&w=majority"
+)
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((error) => console.log(error));
+
+// junyu
+// liqztTai41dpd1dB
