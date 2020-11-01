@@ -62,8 +62,6 @@ const App = () => {
     );
   }
 
-  console.log(routes);
-
   return (
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}

@@ -13,12 +13,13 @@ import {
 import { AuthContext } from "../../shared/context/auth-context";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import { useHttpClient } from "../../shared/hooks/http-hooks";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState();
 
   const [formState, inputHandler, setFormData] = useForm(
     // data structure is coming from the form-hoos custom hook.
@@ -34,6 +35,8 @@ const Auth = () => {
     },
     false
   );
+
+  const [isLoading, error, sendRequest, clearError] = useHttpClient();
 
   const switchModeHanlder = () => {
     if (!isLoginMode) {
@@ -59,44 +62,47 @@ const Auth = () => {
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
-    setIsLoading(true);
-
-    if (!isLoginMode) {
-      try {
-        const response = await fetch("http://localhost:5000/api/users/signup", {
-          method: "POST",
-          headers: {
+    try {
+      if (isLoginMode) {
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/login",
+          "POST",
+          JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+          {
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+          }
+        );
+
+        if (!!responseData) {
+          auth.login();
+        }
+      } else {
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/signup",
+          "POST",
+          JSON.stringify({
             name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
-        }); // fetch = built in API. returns a promise;
+          {
+            "Content-Type": "application/json",
+          }
+        );
 
-        const responseData = await response.json(); // turn the response into json. why does this need to be async?
-        if (response.ok) {
-          console.log(responseData);
-          setIsLoading(false); // this needs to be under the try block instead of outside at the end of everything because the component may not exist
+        if (!!responseData) {
           auth.login();
-        } else {
-          throw new Error(responseData.message); // has to manually throw the error because that's just a response with some data.
         }
-      } catch (err) {
-        console.log(err);
-        setIsLoading(false);
-        setError(err.message || "There is an error without message");
       }
-    } else {
-    }
-
-    // console.log(formState.inputs)
+    } catch (err) {}
   };
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={() => setError(null)} />
+      <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay={true} />}
         <h2>Login Required</h2>

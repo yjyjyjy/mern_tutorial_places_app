@@ -11,8 +11,15 @@ app.use(bodyParser.json()); // json is stored at req.body property.
 
 // add headers to overcome CORS browser check.
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*') // '*' means allow any domain to send requests.
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested')
+  // this
+  res.setHeader("Access-Control-Allow-Origin", "*"); // '*' means allow any domain to send requests.
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    // control which headers the income request may have. could be set to *
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  // control which methods are allowed
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
   next();
 });
 
@@ -38,9 +45,10 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "An unknown error occured" });
 });
 
-mongoose.connect(
-  "mongodb+srv://junyu:liqztTai41dpd1dB@avalon.exhb8.mongodb.net/places?retryWrites=true&w=majority"
-)
+mongoose
+  .connect(
+    "mongodb+srv://junyu:liqztTai41dpd1dB@avalon.exhb8.mongodb.net/places?retryWrites=true&w=majority"
+  )
   .then(() => {
     app.listen(5000);
   })

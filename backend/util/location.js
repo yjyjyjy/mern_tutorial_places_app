@@ -13,7 +13,6 @@ async function getCoordinatesForAddress(address) {
   const data = response.data;
 
   if (!data || data.status !== "OK") {
-    console.log(response);
     throw new HttpError(
       "Could not find the coordinate for the input address",
       404
