@@ -30,7 +30,7 @@ const PlaceItem = (props) => {
 
   return (
     <React.Fragment>
-      <Modal
+      <Modal  // Modal showing the map
         show={showMap}
         // onCancel={closeMapHandler}
         header={props.address}
@@ -42,7 +42,7 @@ const PlaceItem = (props) => {
           <Map center={props.coordinates} zoom={16} />
         </div>
       </Modal>
-      <Modal
+      <Modal  // Modal confirming the delete of a place
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
         header="Are you sure?"
