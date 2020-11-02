@@ -18,8 +18,6 @@ import { useHttpClient } from "../../shared/hooks/http-hooks";
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState();
 
   const [formState, inputHandler, setFormData] = useForm(
     // data structure is coming from the form-hoos custom hook.
@@ -77,7 +75,7 @@ const Auth = () => {
         );
 
         if (!!responseData) {
-          auth.login();
+          auth.login(responseData.userId);
         }
       } else {
         const responseData = await sendRequest(
@@ -94,7 +92,7 @@ const Auth = () => {
         );
 
         if (!!responseData) {
-          auth.login();
+          auth.login(responseData.userId);
         }
       }
     } catch (err) {}

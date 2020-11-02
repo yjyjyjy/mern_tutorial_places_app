@@ -1,41 +1,10 @@
 const HttpError = require("../models/http-error");
-const { v4: uuid } = require("uuid");
 const { validationResult } = require("express-validator");
 const getCoordinatesForAddress = require("../util/location");
 const Place = require("../models/place");
 const User = require("../models/user");
 const mongoose = require("mongoose");
 const dlog = require("../util/log");
-
-// let DUMMY_PLACES = [
-//   {
-//     id: "p1",
-//     title: "Empire State Building",
-//     description: "One of the most famous sky scrapers in the world!",
-//     imageUrl:
-//       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg",
-//     address: "20 W 34th St, New York, NY 10001",
-//     location: {
-//       lat: 40.7484405,
-//       lng: -73.9878584,
-//     },
-//     creator: "u1",
-//   },
-//   {
-//     id: "p95",
-//     title: "Yoda Fountain",
-//     description:
-//       "Fountain featuring the famous Star Wars character outside of the Lucasfilm headquarters.",
-//     imageUrl:
-//       "https://californiathroughmylens.com/wp-content/uploads/2017/07/lucasfilm-10.jpg",
-//     address: "1 Letterman Dr, San Francisco, CA 94129",
-//     location: {
-//       lat: 37.7985211,
-//       lng: -122.4502642,
-//     },
-//     creator: "u2",
-//   },
-// ];
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // {pid:'p1'}
@@ -134,7 +103,7 @@ const createPlace = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ place: createdPlace });
+  res.status(201).json({ createdPlace: createdPlace.toObject({getters:true}) });
 };
 
 const updatePlace = async (req, res, next) => {

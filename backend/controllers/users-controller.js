@@ -4,21 +4,6 @@ const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const dlog = require("../util/log");
 
-// let DUMMY_USERS = [
-//   {
-//     id: "u1",
-//     name: "Junyu Yang",
-//     email: "prowessyang@gmail.com",
-//     password: "password",
-//   },
-//   {
-//     id: "u2",
-//     name: "John Wick",
-//     email: "babayaga@gmail.com",
-//     password: "mydog",
-//   },
-// ];
-
 const getUsers = async (req, res, next) => {
   let users;
   try {
@@ -38,7 +23,7 @@ const signup = async (req, res, next) => {
     return next(new HttpError("Invalid Input passed.", 422));
   }
 
-  const { name, email, password} = req.body;
+  const { name, email, password } = req.body;
 
   let existingUser;
   try {
@@ -62,7 +47,7 @@ const signup = async (req, res, next) => {
     password,
     image:
       "https://www.indiewire.com/wp-content/uploads/2016/10/john-wick-chapter-2.jpg",
-    places:[] // start with empty array.
+    places: [], // start with empty array.
   });
 
   try {
@@ -71,7 +56,7 @@ const signup = async (req, res, next) => {
     return next(new HttpError(`Can't save user ${err}`, 500));
   }
 
-  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+  res.status(201).json({ userId: createdUser.toObject({ getters: true }).id });
 };
 
 const login = async (req, res, next) => {
@@ -99,7 +84,12 @@ const login = async (req, res, next) => {
     return next(new HttpError("Incorrect email or password.", 401));
   }
 
-  res.status(200).json({ message: "Success! User logged in." });
+  res
+    .status(200)
+    .json({
+      userId: user.toObject({ getters: true }).id,
+      message: "Success! User logged in.",
+    });
 };
 
 exports.getUsers = getUsers;
