@@ -14,6 +14,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { useHttpClient } from "../../shared/hooks/http-hooks";
+import ImageUploader from "../../shared/components/FormElements/ImageUploader";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
@@ -38,10 +39,11 @@ const Auth = () => {
 
   const switchModeHanlder = () => {
     if (!isLoginMode) {
+      // sign up to sign in mode
       setFormData(
         // remove the name attribute from the state.input
         Object.keys(formState.inputs)
-          .filter((key) => key !== "name")
+          .filter((key) => !["name", "image"].includes(key))
           .reduce((newInputs, key) => {
             newInputs[key] = formState.inputs[key];
             return newInputs;
@@ -50,7 +52,11 @@ const Auth = () => {
       );
     } else {
       setFormData(
-        { ...formState.inputs, name: { value: "", inValid: false } },
+        {
+          ...formState.inputs,
+          name: { value: "", isValid: false },
+          image: {value:null, isValid: false},
+        },
         false
       );
     }
@@ -116,6 +122,9 @@ const Auth = () => {
               errorText="Please enter a name"
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
+            <ImageUploader center id={"image"} onInput={inputHandler} />
           )}
           <Input
             id="email"
