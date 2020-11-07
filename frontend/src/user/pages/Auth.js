@@ -21,7 +21,7 @@ const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
 
   const [formState, inputHandler, setFormData] = useForm(
-    // data structure is coming from the form-hoos custom hook.
+    // data structure is coming from the form-hooks custom hook.
     {
       email: {
         value: "",
@@ -55,7 +55,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: { value: "", isValid: false },
-          image: {value:null, isValid: false},
+          image: { value: null, isValid: false },
         },
         false
       );
@@ -84,19 +84,21 @@ const Auth = () => {
           auth.login(responseData.userId);
         }
       } else {
+        const formData = new FormData();
+        formData.append("email", formState.inputs.email.value);
+        formData.append("name", formState.inputs.name.value);
+        formData.append("password", formState.inputs.password.value);
+        formData.append("image", formState.inputs.image.value);
+
+        for (var pair of formData.entries()) {
+          console.log(pair[0] + ", " + pair[1]);
+        }
+
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          formData
         );
-
         if (!!responseData) {
           auth.login(responseData.userId);
         }

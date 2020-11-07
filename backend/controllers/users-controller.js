@@ -19,7 +19,7 @@ const getUsers = async (req, res, next) => {
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return next(new HttpError("Invalid Input passed.", 422));
+    return next(new HttpError("Invalid Input passed during sign Up.", 422));
   }
 
   const { name, email, password } = req.body;
@@ -83,12 +83,10 @@ const login = async (req, res, next) => {
     return next(new HttpError("Incorrect email or password.", 401));
   }
 
-  res
-    .status(200)
-    .json({
-      userId: user.toObject({ getters: true }).id,
-      message: "Success! User logged in.",
-    });
+  res.status(200).json({
+    userId: user.toObject({ getters: true }).id,
+    message: "Success! User logged in.",
+  });
 };
 
 exports.getUsers = getUsers;

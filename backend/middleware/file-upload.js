@@ -1,4 +1,4 @@
-const multer = requrie("multer");
+const multer = require("multer");
 const { v4: uuid } = require("uuid");
 
 const MIME_TYPE_MAP = {
