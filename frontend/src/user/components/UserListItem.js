@@ -11,7 +11,7 @@ const UserListItem = ({ id, name, image, placeCount }) => {
       <Card className="user-item__content">
         <Link to={`/${id}/places`}>
           <div className="user-item__image">
-            <Avatar image={image} alt={name} />
+            <Avatar image={`http://localhost:5000/${image}`} alt={name} />
           </div>
 
           <div className="user-item__info">

@@ -1,13 +1,17 @@
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const placesRoutes = require("./routes/places-route");
 const usersRoutes = require("./routes/users-route");
 const HttpError = require("./models/http-error");
 const mongoose = require("mongoose");
+const fs = require("fs"); // node.js module
 
 const app = express();
 
 app.use(bodyParser.json()); // json is stored at req.body property.
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 // add headers to overcome CORS browser check.
 app.use((req, res, next) => {
@@ -37,6 +41,12 @@ app.use((req, res, next) => {
 // if there are 4 input, express recognize this is an error handling middleware.
 app.use((error, req, res, next) => {
   console.log(error.code);
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      // call back comes back to trigger this func
+      console.log(err);
+    });
+  }
   if (res.headerSent) {
     return next(error); // async error handling.
   }

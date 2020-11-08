@@ -44,8 +44,8 @@ const signup = async (req, res, next) => {
     name,
     email,
     password,
-    image:
-      "https://www.indiewire.com/wp-content/uploads/2016/10/john-wick-chapter-2.jpg",
+    image: req.file.path,
+    // "https://www.indiewire.com/wp-content/uploads/2016/10/john-wick-chapter-2.jpg",
     places: [], // start with empty array.
   });
 
