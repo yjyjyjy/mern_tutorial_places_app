@@ -5,10 +5,10 @@ const Place = require("../models/place");
 const User = require("../models/user");
 const mongoose = require("mongoose");
 const dlog = require("../util/log");
+const fs = require("fs"); // node.js module
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // {pid:'p1'}
-
   let place;
   try {
     place = await Place.findById(placeId); // static method
@@ -31,12 +31,12 @@ const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   let user;
   try {
-    user = await User.findById(userId).populate('places')
+    user = await User.findById(userId).populate("places");
   } catch (err) {
     return next(new HttpError("fetching place by user id failed.", 500));
   }
 
-  const places = user.places
+  const places = user.places;
 
   if (!places || places.length == 0) {
     res.json({
@@ -85,8 +85,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location,
-    image:
-      "https://en.wikipedia.org/wiki/Empire_State_Building#/media/File:Empire_State_Building_(aerial_view).jpg",
+    image: req.file.path,
     creator,
   });
 
@@ -103,7 +102,9 @@ const createPlace = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ createdPlace: createdPlace.toObject({getters:true}) });
+  res
+    .status(201)
+    .json({ createdPlace: createdPlace.toObject({ getters: true }) });
 };
 
 const updatePlace = async (req, res, next) => {
@@ -170,6 +171,12 @@ const deletePlace = async (req, res, next) => {
     place.creator.places.pull(place); // mongoose mehtod to remove from an array.
     await place.creator.save({ session });
     await session.commitTransaction();
+    if (!!place.image) {
+      console.log('DELETING' + place.image)
+      fs.unlink(place.image, (err) => {
+        console.log(err);
+      });
+    }
   } catch (err) {
     dlog(err);
     return next(new HttpError(`Failed to delete the place: ${err}`, 500));

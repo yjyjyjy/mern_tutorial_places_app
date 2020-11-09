@@ -43,7 +43,6 @@ app.use((error, req, res, next) => {
   console.log(error.code);
   if (req.file) {
     fs.unlink(req.file.path, (err) => {
-      // call back comes back to trigger this func
       console.log(err);
     });
   }

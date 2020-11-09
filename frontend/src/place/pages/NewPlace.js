@@ -12,6 +12,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHistory } from "react-router-dom";
+import ImageUploader from "../../shared/components/FormElements/ImageUploader";
 
 const NewPlace = () => {
   const [formState, inputHandler] = useForm(
@@ -21,6 +22,14 @@ const NewPlace = () => {
         isValid: false,
       },
       description: {
+        value: "",
+        isValid: false,
+      },
+      address: {
+        value: "",
+        isValid: false,
+      },
+      image: {
         value: "",
         isValid: false,
       },
@@ -35,20 +44,15 @@ const NewPlace = () => {
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData();
+    formData.append("title", formState.inputs.title.value);
+    formData.append("description", formState.inputs.description.value);
+    formData.append("address", formState.inputs.address.value);
+    formData.append("creator", auth.currentUserId);
+    formData.append("image", formState.inputs.image.value);
+
     try {
-      await sendRequest(
-        "http://localhost:5000/api/places",
-        "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          creator: auth.currentUserId,
-        }),
-        {
-          "Content-Type": "application/json",
-        }
-      );
+      await sendRequest("http://localhost:5000/api/places", "POST", formData);
       // redirect to "/"
       history.push("/");
     } catch (err) {}
@@ -69,14 +73,6 @@ const NewPlace = () => {
           onInput={inputHandler}
         />
         <Input
-          id="description"
-          element="textarea"
-          label="Description"
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid description (at least 5 characters)."
-          onInput={inputHandler}
-        />
-        <Input
           id="address"
           element="input"
           label="Address"
@@ -84,6 +80,15 @@ const NewPlace = () => {
           errorText="Please enter a valid address."
           onInput={inputHandler}
         />
+        <Input
+          id="description"
+          element="textarea"
+          label="Description"
+          validators={[VALIDATOR_MINLENGTH(5)]}
+          errorText="Please enter a valid description (at least 5 characters)."
+          onInput={inputHandler}
+        />
+        <ImageUploader center id={"image"} onInput={inputHandler} />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
         </Button>
