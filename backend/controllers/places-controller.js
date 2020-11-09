@@ -172,7 +172,6 @@ const deletePlace = async (req, res, next) => {
     await place.creator.save({ session });
     await session.commitTransaction();
     if (!!place.image) {
-      console.log('DELETING' + place.image)
       fs.unlink(place.image, (err) => {
         console.log(err);
       });

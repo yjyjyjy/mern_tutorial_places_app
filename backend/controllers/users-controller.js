@@ -2,6 +2,9 @@ const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const dlog = require("../util/log");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const PRIVATE_KEY = "supersecret_dont_share"; // this is the private key. Never share with any client. This is dumb string tho.
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -40,12 +43,18 @@ const signup = async (req, res, next) => {
     return next(new HttpError("user email already registered", 401));
   }
 
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12); // 12 salting rounds
+  } catch (err) {
+    return next(new HttpError("cannot hash passowrd", 500));
+  }
+
   const createdUser = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
     image: req.file.path,
-    // "https://www.indiewire.com/wp-content/uploads/2016/10/john-wick-chapter-2.jpg",
     places: [], // start with empty array.
   });
 
@@ -55,7 +64,21 @@ const signup = async (req, res, next) => {
     return next(new HttpError(`Can't save user ${err}`, 500));
   }
 
-  res.status(201).json({ userId: createdUser.toObject({ getters: true }).id });
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      PRIVATE_KEY,
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    return next(new HttpError(`Signup Failed: ${err}`, 500));
+  }
+
+  res.status(201).json({
+    userId: createdUser.id,
+    token: token,
+  });
 };
 
 const login = async (req, res, next) => {
@@ -71,20 +94,33 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   let user;
+  let isValidPassword = false;
+
   try {
-    user = await User.findOne({ email: email, password: password });
+    user = await User.findOne({ email: email });
+    isValidPassword = await bcrypt.compare(password, user.password);
   } catch (err) {
     return next(
       new HttpError(`Failed to retrieve user data during sign in: ${err}`, 500)
     );
   }
 
-  if (!user) {
+  if (!user || !isValidPassword) {
     return next(new HttpError("Incorrect email or password.", 401));
   }
 
+  let token;
+  try {
+    token = jwt.sign({ userId: user.id, email: user.email }, PRIVATE_KEY, {
+      expiresIn: "1h",
+    });
+  } catch (err) {
+    return next(new HttpError(`SignIn Failed: ${err}`, 500));
+  }
+
   res.status(200).json({
-    userId: user.toObject({ getters: true }).id,
+    userId: user.id,
+    token: token,
     message: "Success! User logged in.",
   });
 };
