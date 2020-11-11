@@ -134,6 +134,10 @@ const updatePlace = async (req, res, next) => {
     );
   }
 
+  if (place.creator.toString() !== req.userData.userId) {
+    return next(new HttpError(`Not from authroized user: ${err}`, 401));
+  }
+
   const { title, description } = req.body;
 
   place.title = title;
@@ -163,6 +167,11 @@ const deletePlace = async (req, res, next) => {
 
   if (!place) {
     return next(new HttpError(`Failed to find the place to be deleted`, 404));
+  }
+
+  // check authorization
+  if (place.creator.id !== req.userData.userId) {
+    return next(new HttpError(`Not from authroized user: ${err}`, 401));
   }
 
   try {
