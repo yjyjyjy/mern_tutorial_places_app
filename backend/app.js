@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Headers",
     // control which headers the income request may have. could be set to *
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    "Origin, X-Requested-With, Content-Type, Accept, AuthToken"
   );
   // control which methods are allowed
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");

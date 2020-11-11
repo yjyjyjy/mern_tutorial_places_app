@@ -6,6 +6,7 @@ const User = require("../models/user");
 const mongoose = require("mongoose");
 const dlog = require("../util/log");
 const fs = require("fs"); // node.js module
+const { Console } = require("console");
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // {pid:'p1'}
