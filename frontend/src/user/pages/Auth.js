@@ -81,7 +81,7 @@ const Auth = () => {
         );
 
         if (!!responseData) {
-          auth.login(responseData.userId);
+          auth.login(responseData.userId, responseData.token);
         }
       } else {
         const formData = new FormData();
@@ -90,17 +90,13 @@ const Auth = () => {
         formData.append("password", formState.inputs.password.value);
         formData.append("image", formState.inputs.image.value);
 
-        for (var pair of formData.entries()) {
-          console.log(pair[0] + ", " + pair[1]);
-        }
-
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
           formData
         );
         if (!!responseData) {
-          auth.login(responseData.userId);
+          auth.login(responseData.userId, responseData.token);
         }
       }
     } catch (err) {}

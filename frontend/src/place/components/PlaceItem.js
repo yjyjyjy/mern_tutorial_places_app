@@ -34,10 +34,12 @@ const PlaceItem = (props) => {
     try {
       await sendRequest(
         `http://localhost:5000/api/places/${props.id}`,
-        "DELETE"
+        "DELETE",
+        null,
+        { AuthToken: auth.authToken }
       );
       props.onPlaceDeleteHandler(props.id);
-      // history.push(`/${auth.currentUserId}/places`);      
+      // history.push(`/${auth.currentUserId}/places`);
     } catch {}
   };
 
@@ -81,7 +83,10 @@ const PlaceItem = (props) => {
         <Card className="place-item__content">
           {isLoading && <LoadingSpinner asOverlay={true} />}
           <div className="place-item__image">
-            <img src={`http://localhost:5000/${props.image}`} alt={props.title} /> 
+            <img
+              src={`http://localhost:5000/${props.image}`}
+              alt={props.title}
+            />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>

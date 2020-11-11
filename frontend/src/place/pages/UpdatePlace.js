@@ -66,6 +66,7 @@ const UpdatePlace = () => {
         }),
         {
           "Content-Type": "application/json",
+          AuthToken: auth.authToken,
         }
       );
       history.push(`/${auth.currentUserId}/places`);

@@ -52,7 +52,10 @@ const NewPlace = () => {
     formData.append("image", formState.inputs.image.value);
 
     try {
-      await sendRequest("http://localhost:5000/api/places", "POST", formData);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
+        // here is the header
+        AuthToken: auth.authToken,
+      });
       // redirect to "/"
       history.push("/");
     } catch (err) {}
