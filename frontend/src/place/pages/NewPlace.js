@@ -48,7 +48,7 @@ const NewPlace = () => {
     formData.append("title", formState.inputs.title.value);
     formData.append("description", formState.inputs.description.value);
     formData.append("address", formState.inputs.address.value);
-    formData.append("creator", auth.currentUserId);
+    // formData.append("creator", auth.currentUserId); // This is not needed since the backend will rely on authToken to verify the userID
     formData.append("image", formState.inputs.image.value);
 
     try {

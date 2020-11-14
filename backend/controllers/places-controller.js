@@ -56,8 +56,8 @@ const createPlace = async (req, res, next) => {
     next(new HttpError("Invalid Input passed.", 422));
   }
 
-  const { title, description, address, creator } = req.body;
-
+  const { title, description, address } = req.body;
+  const creator = req.userData.userId; // this is the user ID extracted from the auth Token
   let user;
   try {
     user = await User.findById(creator);
