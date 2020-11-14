@@ -27,4 +27,3 @@ const Map = (props) => {
 
 export default Map;
 
-//

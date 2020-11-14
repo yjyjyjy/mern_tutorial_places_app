@@ -11,7 +11,10 @@ const UserListItem = ({ id, name, image, placeCount }) => {
       <Card className="user-item__content">
         <Link to={`/${id}/places`}>
           <div className="user-item__image">
-            <Avatar image={`http://localhost:5000/${image}`} alt={name} />
+            <Avatar
+              image={`${process.env.REACT_APP_ASSET_URL}/${image}`}
+              alt={name}
+            />
           </div>
 
           <div className="user-item__info">
@@ -27,4 +30,3 @@ const UserListItem = ({ id, name, image, placeCount }) => {
 };
 
 export default UserListItem;
-

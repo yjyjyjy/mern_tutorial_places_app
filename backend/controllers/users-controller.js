@@ -4,7 +4,7 @@ const User = require("../models/user");
 const dlog = require("../util/log");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const PRIVATE_KEY = "supersecret_dont_share"; // this is the private key. Never share with any client. This is dumb string tho.
+const PRIVATE_KEY = process.env.AUTH_PRIVATE_KEY; // this is the private key. Never share with any client. This is dumb string tho.
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -128,4 +128,3 @@ const login = async (req, res, next) => {
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
-exports.PRIVATE_KEY = PRIVATE_KEY;

@@ -56,12 +56,9 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://junyu:liqztTai41dpd1dB@avalon.exhb8.mongodb.net/places?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@avalon.exhb8.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(5000);
   })
   .catch((error) => console.log(error));
-
-// junyu
-// liqztTai41dpd1dB

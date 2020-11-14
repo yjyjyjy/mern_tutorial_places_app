@@ -1,6 +1,6 @@
 const HttpError = require("../models/http-error");
 const jwt = require("jsonwebtoken");
-const { PRIVATE_KEY } = require("../controllers/users-controller");
+const PRIVATE_KEY = process.env.AUTH_PRIVATE_KEY;
 
 module.exports = (req, res, next) => {
   if (req.method === "OPTIONS") {
@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    const token = req.headers.authtoken//.split(" ")[1]; // Authrozation: 'Bearer TOKENSTRING' << seems stupid.
+    const token = req.headers.authtoken; //.split(" ")[1]; // Authrozation: 'Bearer TOKENSTRING' << seems stupid.
     // the token can't be in the request body because not all requests have body.
     if (!token) {
       throw new Error();
