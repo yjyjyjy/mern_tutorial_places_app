@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import UserList from "../components/UserList";
-import { useHttpClient } from "../../shared/hooks/http-hooks";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Users = () => {
   const [loadedUsers, setLoadedUsers] = useState();

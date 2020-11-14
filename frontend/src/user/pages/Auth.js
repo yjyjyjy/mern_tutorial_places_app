@@ -4,7 +4,7 @@ import "./Auth.css";
 import Input from "../../shared/components/FormElements/Input";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
-import { useForm } from "../../shared/hooks/form-hooks";
+import { useForm } from "../../shared/hooks/form-hook";
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_EMAIL,
@@ -13,7 +13,7 @@ import {
 import { AuthContext } from "../../shared/context/auth-context";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import { useHttpClient } from "../../shared/hooks/http-hooks";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import ImageUploader from "../../shared/components/FormElements/ImageUploader";
 
 const Auth = () => {
