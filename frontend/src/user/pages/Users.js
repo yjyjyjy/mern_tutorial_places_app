@@ -13,13 +13,13 @@ const Users = () => {
       const responseData = await sendRequest("http://localhost:5000/api/users");
       if (!!responseData.users) {
         setLoadedUsers(responseData.users);
-      } 
+      }
     } catch (err) {}
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  },[]);
 
   return (
     <Fragment>

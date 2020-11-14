@@ -8,14 +8,12 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hooks";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import { useHistory } from "react-router-dom";
 
 const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmedModal] = useState(false);
   const [isLoading, error, sendRequest, clearError] = useHttpClient();
-  const history = useHistory();
 
   const openMapHandler = () => setShowMap(true);
 
@@ -39,7 +37,6 @@ const PlaceItem = (props) => {
         { AuthToken: auth.authToken }
       );
       props.onPlaceDeleteHandler(props.id);
-      // history.push(`/${auth.currentUserId}/places`);
     } catch {}
   };
 

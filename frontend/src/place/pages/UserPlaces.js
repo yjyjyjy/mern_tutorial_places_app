@@ -22,7 +22,7 @@ const UserPlaces = () => {
 
   useEffect(() => {
     fetchPlaces();
-  }, []);
+  },[]);
 
   const onPlaceDeleteHandler = (deletedPlaceId) => {
     setUserPlaces(userPlaces.filter((place) => place.id !== deletedPlaceId));
